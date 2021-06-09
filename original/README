@@ -1,0 +1,210 @@
+INTRODUCTION:
+This is 'dflo', a data-flow equation visualization and experimentation tool.
+Given a directed graph (nodes and edges) and a set of simple assignments 
+within each node (scalar left hand side, simple expression of scalars
+and integer constants on right hand side), and a set of simple boolean
+data-flow equations, it displays the flow graph, allows a user to 
+  (1) select an expression, whereupon it displays the nodes which contain
+      a computation of that expression and which contain definitions that
+      kill that expression; and
+  (2) select a data-flow equation, whereupon it highlights the nodes
+      and/or edges where the data-flow solution for the selected expression
+      is True.
+The source code for this tool is hereby placed in the public domain.
+
+SOURCE:
+The tools is written in C++, with a lex/yacc (flex/bison) parser, and uses
+X-windows and the X toolkit and the Motif library for graphical display.
+The tool was constructed entirely at the Oregon Graduate Institute.
+Please feel free to play with it, or modify it.
+
+INSTALLATION:
+The tar file contains the C++ source (with the lex/yacc parser) and a makefile
+that we used successfully with the gcc compiler on a SunOS Sparcstation.
+You may need to modify the makefile to point to your X windows and Motif
+directories.  The makefile creates an executable named 'dflo'.
+
+INPUTS:
+To run the program, type 'dflo file1 [file2]...'.
+The files are essentially concatenated and processed as one; this allows a
+user to put the flow graphs in one file and the data-flow equations in another.
+
+FLOW GRAPH INPUT:
+The flow graph is given as a list of edges, and a list of simple assignments
+in each node.  Assignments can have empty left or right hand sides.
+A sample flow graph is:
+	(entry,b1)
+	(b1,b2)
+	(b2,b3)
+	(b2,b4)
+	(b3,b5)
+	(b4,b5)
+	(b5,b2)
+	(b5,b6)
+	(b6,exit)
+	b1[a=0,i=0]
+	b2[i=i+1,b=]
+	b3[b=,=i]
+	b4[a=a+1,=b+a,=i]
+	b5[=b+a]
+	b6[=b+a,=a]
+The tool can be used to simply display flow graphs; different kinds of
+graph edges can be displayed, such as:
+	b2..>b3		(dotted edge)
+	b2<--b3		(arrow pointing backward)
+	b2--b3		(no arrow)
+	b2<-->b3)	(double arrowed edge)
+	b2..b3		(dotted edge, no arrow)
+
+I have changed the lex/yacc input to make different versions of the tool
+or to read input designed for another tool; you should feel free to do so, also.
+
+DATA-FLOW EQUATION INPUT:
+Data-flow equations are allowed on edges and nodes.  Stupid implementation 
+restrictions limit the number of equations to 32.  Equations may be 
+recursive (depending on the same equation for predecessor or successor
+nodes or edges); also, for node equations, the DF.in and DF.out may be mutually
+recursive, but no other mutual recursions are allowed.  Otherwise, equations 
+may depend acyclically upon each other.
+
+There are five basic attributes of each node or edge for an expression:
+	TRANS - for a node, the node is transparent with respect to this 
+		expression, i.e., does not contain an assignment to any operand
+	TRANSUP - for an edge, the target node is transparent with respect to
+		this expression.
+	TRANSDOWN - for an edge, the source node is transparent with respect to
+		this expression.
+	EXPOSEUP - for a node, the expression is upwards exposed
+		(i.e., is computed before any assignment to any operand);
+		for an edge, the expression is upwards exposed at the target
+		node.
+	EXPOSEDOWN - for a node, the expression is downwards exposed;
+		(i.e., is computed after any assignment to any operand);
+		for an edge, the expression is downwards exposed at the source
+		node.
+
+The data-flow equation gives:
+(1) the equation name, which may include .in and .out suffix for node equations
+(2) 'node' for node equations and 'edge' for edge equations
+(3) '+' for forward equations (default) or '-' for backwards equations
+(4) the initial value and the value to use at boundary nodes
+    (entry nodes for forward equations, exit nodes for backwards equations);
+    the default for both is zero.
+(5) a boolean expression:
+
+expression	= NAME				/* data-flow equation value */
+		= NAME.in			/* .in value for this node */
+		= NAME.out			/* .out value for this node */
+		= expression * expression	/* AND */
+		= expression + expression	/* OR */
+		= ! expression			/* NOT */
+		= ( expression )
+		= [all|any] [preds|succs] expression		/* see below */
+		= [all|any] [preds|succs] edge expression	/* see below */
+		= [pred|succ] node expression			/* see below */
+
+'edge' and 'edges' are synonyms.
+'pred', 'preds', 'predecessor' and 'predecessors' are synonyms.
+'succ', 'succs', 'successor' and 'successors' are synonyms.
+'all' and 'intersection' are synonyms
+'any' and 'union' are synonyms
+
+DATA-FLOW:
+For a node data-flow equation:
+
+    all preds expression
+	Evaluate the expression at all predecessor nodes;
+	AND the results.
+    any preds expression
+	Evaluate the expression at all predecessor nodes;
+	OR the results.
+    all preds edge expression
+	Evaluate the expression at all incoming edges; 
+	the expression must be an edge expression;
+	AND the results.
+	Note that node expressions cannot be mutually recursive with
+	edge expressions, so the edge expression must already be solved.
+    Similarly for all|any succs, or succ edges.
+
+For an edge data-flow expression
+    all preds expression
+	Evaluate the expression at all predecessor edges to the source node;
+	AND the results.
+    any preds expression
+	Evaluate the expression at all predecessor edges to the source node;
+	OR the results.
+    pred node expression
+	Evaluate the expression at the source node;
+	the expression must be a node expression;
+	Note that edge expressions cannot be mutually recursive with
+	edge expressions, so the node expression must already be solved.
+
+DATA-FLOW SOLUTION:
+The data-flow equations are solved in the order given; note that edge and
+node equations may have the same name, or node equations may have .in and
+.out suffixes.  The equations are solved for an expression when the expression
+is selected.  A simple iterative solver is used for each equation, iterating
+lexically forward or backward until convergence.  Note that RPostorder is
+not used, so you can make it run slowly if you want; this can be used to
+demonstrate the importance of RPostorder. 
+
+You may also display equations that are not truly data-flow, but simple
+computations.  Bidirectional data-flow equations can also be solved, but
+may not be solved in the most optimal node ordering.
+
+DISPLAY:
+When you select a data-flow equation to display, the nodes or edges where
+the solution is True are highlighted.  For an edge expression, a edge with
+True solution is shown as bold.  For a node expression, a node with
+True .in solution has its upper half shown in bold; a node with True .out
+solution has its lower half shown in bold.  If it is True both in and out,
+the whole node is highlighted.
+
+SAMPLE DATA-FLOW EQUATIONS:
+The following system finds where an expression is available:
+{ AVAIL.in node + [1] = all preds( AVAIL.out );
+  AVAIL.out node + [1] = AVAIL.in*TRANS + EXPOSEDOWN }
+This says compute AVAIL on nodes as AVAIL.in and AVAIL.out; the '+' says this
+is a forward system, and the '[1]' says to initialize the solution to 1.
+The expression after the '=' should be pretty transparent, where EXPOSEDOWN
+is one of the basic attributes.  Selecting this expression makes nodes where
+the expression is available-in or available-out become highlighted either
+in the upper-half or lower-half (or both).
+
+If only AVAIL.in is needed, this could be written as a single equation:
+{ AVAIL.in node + [1] = all preds( AVAIL.in*TRANS + EXPOSEDOWN ) }
+Now, only the upper half of nodes where the expression is available-in are
+highlighted.
+
+Rewriting the expression to compute availability along edges gives:
+{ AVAIL edge + [1] = EXPOSEDOWN + TRANSDOWN * all preds( AVAIL ) }
+The only real difference is that the property TRANS is not defined for edges;
+here TRANSDOWN means the source node for this edge is transparent.
+
+Any of the following will show both nodes and edges where the expression
+is available:
+
+(a) (solve the node system and edge system independently)
+{ AVAIL.in node + [1] = all preds( AVAIL.out );
+  AVAIL.out node + [1] = AVAIL.in*TRANS + EXPOSEDOWN;
+  AVAIL edge + [1] = EXPOSEDOWN + TRANSDOWN * all preds( AVAIL ) }
+
+(b) (solve the node system, imply the edge system from the node solution)
+{ AVAIL.in node + [1] = all preds( AVAIL.out );
+  AVAIL.out node + [1] = AVAIL.in*TRANS + EXPOSEDOWN;
+  AVAIL edge + [1] = pred node( AVAIL.out ) }
+
+(c) (solve the edge system, imply the node solution from the edge solution)
+{ AVAIL edge + [1] = EXPOSEDOWN + TRANSDOWN * all preds( AVAIL );
+  AVAIL.in node + [1] = all pred edges( AVAIL );
+  AVAIL.out node + [1] = AVAIL.in*TRANS + EXPOSEDOWN }
+
+SAMPLE FILES:
+The tool comes with several sample flow graphs, mostly taken from figures
+from papers about partial redundancy elimination.  The files are 'ex1.in'
+and so on.  A file 'system' gives a bunch of data-flow equations for,
+among other things, Safety (anticipatability), Availability, Partial
+Availability, Liveness, and some forms of partial redundancy elimination.
+
+WARRANTY:
+None given or implied.

@@ -1,0 +1,10 @@
+#!/bin/sh -x
+bison gdy.y -x -d --graph=gdy.gv
+bison ggy.y -x -d --graph=ggy.gv
+xsltproc xml2xhtml.xsl gdy.xml >gdy.html
+xsltproc xml2xhtml.xsl ggy.xml >ggy.html
+
+
+
+
+

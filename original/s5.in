@@ -1,0 +1,14 @@
+a..>b
+b->c
+b..d
+c<->e
+c<..>f
+d<-g
+g->h
+h<-i
+h->j
+(j,k)
+(j,l)
+(j,m)
+m <- n
+g..>k

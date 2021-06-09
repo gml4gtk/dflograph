@@ -1,0 +1,11 @@
+{ AVAIL1.in node + [1] = all preds( AVAIL1.out );
+  AVAIL1.out node + [1] = AVAIL1.in*TRANS + EXPOSEDOWN;
+  AVAIL1 edge + [1] = EXPOSEDOWN + TRANSDOWN * all preds( AVAIL1 ) }
+
+{ AVAIL2.in node + [1] = all preds( AVAIL2.out );
+  AVAIL2.out node + [1] = AVAIL2.in*TRANS + EXPOSEDOWN;
+  AVAIL2 edge + [1] = pred node( AVAIL2.out ) }
+
+{ AVAIL3 edge + [1] = EXPOSEDOWN + TRANSDOWN * all preds( AVAIL3 );
+  AVAIL3.in node + [1] = all pred edges( AVAIL3 );
+  AVAIL3.out node + [1] = AVAIL3.in*TRANS + EXPOSEDOWN }

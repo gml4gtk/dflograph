@@ -1,0 +1,7 @@
+                  (d,a) (a,e) (a,f)             (a,i)
+            (c,b)             (b,f) (b,g) (b,j)       (b,h)
+                  (c,d) (c,e) (c,f)       (c,h) (c,i)
+                        (d,e)                         (d,j)
+                              (e,f)             (e,i)
+                                                      (f,j)
+                                          (g,h)

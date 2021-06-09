@@ -1,0 +1,29 @@
+{ exposeup edge = EXPOSEUP; exposeup.in node = EXPOSEUP }
+{ exposedown edge = EXPOSEDOWN; exposedown.out node = EXPOSEDOWN }
+{ transup edge = TRANSUP; transup.in node = TRANS }
+{ transdown edge = TRANSDOWN; transdown.out node = TRANS }
+{ SAFE edge - [1] = all succs( SAFE ) * TRANSUP + EXPOSEUP;
+  SAFE.out node - [1] = all succs( SAFE.in );
+  SAFE.in node - [1] = SAFE.out*TRANS + EXPOSEUP }
+{ AVAIL edge + [1] = EXPOSEDOWN + TRANSDOWN * all preds( AVAIL );
+  AVAIL.in node + [1] = all preds( AVAIL.out );
+  AVAIL.out node + [1] = AVAIL.in*TRANS + EXPOSEDOWN }
+{ PAV edge + [0] = EXPOSEDOWN + TRANSDOWN * any preds( PAV );
+  PAV.in node + [0] = any preds( PAV.out );
+  PAV.out node + [0] = PAV.in*TRANS + EXPOSEDOWN }
+{ LIVE edge - [0] = any succs( LIVE ) * TRANSUP + EXPOSEUP;
+  LIVE.in node - [1] = LIVE.out * TRANS + EXPOSEUP ;
+  LIVE.out node - [1] = any succs( LIVE.in ) }
+{ CONST edge = SAFE * ( all succs( any pred( PAV ) ) + !EXPOSEUP * TRANSUP ) }
+{ PP edge - [1] = CONST * ( EXPOSEUP + TRANSUP * all succs ( PP ) );
+  PP.in node - [1] = ( TRANS * PP.out + EXPOSEUP ) * ( all pred( PP.out ) );
+  PP.out node - [1] = all succs( PP.in ) }
+{ PPInsert edge = PP*!AVAIL*( any pred( !PP ) + !TRANSDOWN );
+  PPInsert.out node = PP.out*!any pred edge(AVAIL)*!PP.in }
+{ InsertSafe edge = SAFE*!AVAIL*( any pred( !SAFE ) + !TRANSDOWN ) }
+{ EARLIEST edge + [1,1] = !TRANSDOWN + any preds( EARLIEST * !SAFE ) }
+{ UnAvail edge [,1] = !TRANSDOWN + any preds( !SAFE ) }
+{ UnAvailNotEarliest edge = UnAvail * !EARLIEST + !UnAvail*EARLIEST }
+{ SafeEarliest edge = SAFE * EARLIEST }
+{ DELAY edge + [1] = SafeEarliest + all preds( !EXPOSEUP * DELAY ) }
+{ Latest edge = DELAY * (EXPOSEUP + !( all succs( DELAY ) ) ) }

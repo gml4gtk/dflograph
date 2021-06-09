@@ -1,0 +1,586 @@
+<?xml version="1.0"?>
+
+<bison-xml-report version="3.3.2" bug-report="bug-bison@gnu.org" url="http://www.gnu.org/software/bison/">
+
+  <filename>gdy.y</filename>
+
+  <grammar>
+    <rules>
+      <rule number="0" usefulness="useful">
+        <lhs>$accept</lhs>
+        <rhs>
+          <symbol>graph</symbol>
+          <symbol>$end</symbol>
+        </rhs>
+      </rule>
+      <rule number="1" usefulness="useful">
+        <lhs>graph</lhs>
+        <rhs>
+          <symbol>graphtype</symbol>
+          <symbol>TLSB</symbol>
+          <symbol>things</symbol>
+          <symbol>TRSB</symbol>
+        </rhs>
+      </rule>
+      <rule number="2" usefulness="useful">
+        <lhs>graphtype</lhs>
+        <rhs>
+          <symbol>TGRAPH</symbol>
+        </rhs>
+      </rule>
+      <rule number="3" usefulness="useful">
+        <lhs>graphtype</lhs>
+        <rhs>
+          <symbol>TDIGRAPH</symbol>
+        </rhs>
+      </rule>
+      <rule number="4" usefulness="useful">
+        <lhs>things</lhs>
+        <rhs>
+          <symbol>thing</symbol>
+        </rhs>
+      </rule>
+      <rule number="5" usefulness="useful">
+        <lhs>things</lhs>
+        <rhs>
+          <symbol>things</symbol>
+          <symbol>thing</symbol>
+        </rhs>
+      </rule>
+      <rule number="6" usefulness="useful">
+        <lhs>thing</lhs>
+        <rhs>
+          <symbol>node</symbol>
+        </rhs>
+      </rule>
+      <rule number="7" usefulness="useful">
+        <lhs>thing</lhs>
+        <rhs>
+          <symbol>edge</symbol>
+        </rhs>
+      </rule>
+      <rule number="8" usefulness="useful">
+        <lhs>node</lhs>
+        <rhs>
+          <symbol>TNODE</symbol>
+          <symbol>TLSB</symbol>
+          <symbol>nodenum</symbol>
+          <symbol>TRSB</symbol>
+        </rhs>
+      </rule>
+      <rule number="9" usefulness="useful">
+        <lhs>$@1</lhs>
+        <rhs>
+          <empty/>
+        </rhs>
+      </rule>
+      <rule number="10" usefulness="useful">
+        <lhs>node</lhs>
+        <rhs>
+          <symbol>TNODE</symbol>
+          <symbol>TLSB</symbol>
+          <symbol>nodenum</symbol>
+          <symbol>nodestring</symbol>
+          <symbol>$@1</symbol>
+          <symbol>TRSB</symbol>
+        </rhs>
+      </rule>
+      <rule number="11" usefulness="useful">
+        <lhs>nodenum</lhs>
+        <rhs>
+          <symbol>TINT</symbol>
+        </rhs>
+      </rule>
+      <rule number="12" usefulness="useful">
+        <lhs>nodestring</lhs>
+        <rhs>
+          <symbol>TSTRING</symbol>
+        </rhs>
+      </rule>
+      <rule number="13" usefulness="useful">
+        <lhs>$@2</lhs>
+        <rhs>
+          <empty/>
+        </rhs>
+      </rule>
+      <rule number="14" usefulness="useful">
+        <lhs>edge</lhs>
+        <rhs>
+          <symbol>TEDGE</symbol>
+          <symbol>TLSB</symbol>
+          <symbol>nodenum</symbol>
+          <symbol>nodenum</symbol>
+          <symbol>$@2</symbol>
+          <symbol>TRSB</symbol>
+        </rhs>
+      </rule>
+    </rules>
+    <terminals>
+      <terminal symbol-number="0" token-number="0" name="$end" usefulness="useful"/>
+      <terminal symbol-number="1" token-number="256" name="error" usefulness="useful"/>
+      <terminal symbol-number="3" token-number="258" name="TLSB" usefulness="useful"/>
+      <terminal symbol-number="4" token-number="259" name="TRSB" usefulness="useful"/>
+      <terminal symbol-number="5" token-number="260" name="TNODE" usefulness="useful"/>
+      <terminal symbol-number="6" token-number="261" name="TEDGE" usefulness="useful"/>
+      <terminal symbol-number="7" token-number="262" name="TGRAPH" usefulness="useful"/>
+      <terminal symbol-number="8" token-number="263" name="TDIGRAPH" usefulness="useful"/>
+      <terminal symbol-number="9" token-number="264" name="TINT" usefulness="useful"/>
+      <terminal symbol-number="10" token-number="265" name="TSTRING" usefulness="useful"/>
+    </terminals>
+    <nonterminals>
+      <nonterminal symbol-number="11" name="$accept" usefulness="useful"/>
+      <nonterminal symbol-number="12" name="graph" usefulness="useful"/>
+      <nonterminal symbol-number="13" name="graphtype" usefulness="useful"/>
+      <nonterminal symbol-number="14" name="things" usefulness="useful"/>
+      <nonterminal symbol-number="15" name="thing" usefulness="useful"/>
+      <nonterminal symbol-number="16" name="node" usefulness="useful"/>
+      <nonterminal symbol-number="17" name="$@1" usefulness="useful"/>
+      <nonterminal symbol-number="18" name="nodenum" usefulness="useful"/>
+      <nonterminal symbol-number="19" name="nodestring" usefulness="useful"/>
+      <nonterminal symbol-number="20" name="edge" usefulness="useful"/>
+      <nonterminal symbol-number="21" name="$@2" usefulness="useful"/>
+    </nonterminals>
+  </grammar>
+
+  <automaton>
+
+    <state number="0">
+      <itemset>
+        <item rule-number="0" point="0"/>
+        <item rule-number="1" point="0"/>
+        <item rule-number="2" point="0"/>
+        <item rule-number="3" point="0"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TGRAPH" state="1"/>
+          <transition type="shift" symbol="TDIGRAPH" state="2"/>
+          <transition type="goto" symbol="graph" state="3"/>
+          <transition type="goto" symbol="graphtype" state="4"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="1">
+      <itemset>
+        <item rule-number="2" point="1"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="2" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="2">
+      <itemset>
+        <item rule-number="3" point="1"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="3" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="3">
+      <itemset>
+        <item rule-number="0" point="1"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="$end" state="5"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="4">
+      <itemset>
+        <item rule-number="1" point="1"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TLSB" state="6"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="5">
+      <itemset>
+        <item rule-number="0" point="2"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="accept" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="6">
+      <itemset>
+        <item rule-number="1" point="2"/>
+        <item rule-number="4" point="0"/>
+        <item rule-number="5" point="0"/>
+        <item rule-number="6" point="0"/>
+        <item rule-number="7" point="0"/>
+        <item rule-number="8" point="0"/>
+        <item rule-number="10" point="0"/>
+        <item rule-number="14" point="0"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TNODE" state="7"/>
+          <transition type="shift" symbol="TEDGE" state="8"/>
+          <transition type="goto" symbol="things" state="9"/>
+          <transition type="goto" symbol="thing" state="10"/>
+          <transition type="goto" symbol="node" state="11"/>
+          <transition type="goto" symbol="edge" state="12"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="7">
+      <itemset>
+        <item rule-number="8" point="1"/>
+        <item rule-number="10" point="1"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TLSB" state="13"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="8">
+      <itemset>
+        <item rule-number="14" point="1"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TLSB" state="14"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="9">
+      <itemset>
+        <item rule-number="1" point="3"/>
+        <item rule-number="5" point="1"/>
+        <item rule-number="6" point="0"/>
+        <item rule-number="7" point="0"/>
+        <item rule-number="8" point="0"/>
+        <item rule-number="10" point="0"/>
+        <item rule-number="14" point="0"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TRSB" state="15"/>
+          <transition type="shift" symbol="TNODE" state="7"/>
+          <transition type="shift" symbol="TEDGE" state="8"/>
+          <transition type="goto" symbol="thing" state="16"/>
+          <transition type="goto" symbol="node" state="11"/>
+          <transition type="goto" symbol="edge" state="12"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="10">
+      <itemset>
+        <item rule-number="4" point="1"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="4" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="11">
+      <itemset>
+        <item rule-number="6" point="1"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="6" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="12">
+      <itemset>
+        <item rule-number="7" point="1"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="7" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="13">
+      <itemset>
+        <item rule-number="8" point="2"/>
+        <item rule-number="10" point="2"/>
+        <item rule-number="11" point="0"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TINT" state="17"/>
+          <transition type="goto" symbol="nodenum" state="18"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="14">
+      <itemset>
+        <item rule-number="11" point="0"/>
+        <item rule-number="14" point="2"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TINT" state="17"/>
+          <transition type="goto" symbol="nodenum" state="19"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="15">
+      <itemset>
+        <item rule-number="1" point="4"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="1" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="16">
+      <itemset>
+        <item rule-number="5" point="2"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="5" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="17">
+      <itemset>
+        <item rule-number="11" point="1"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="11" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="18">
+      <itemset>
+        <item rule-number="8" point="3"/>
+        <item rule-number="10" point="3"/>
+        <item rule-number="12" point="0"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TRSB" state="20"/>
+          <transition type="shift" symbol="TSTRING" state="21"/>
+          <transition type="goto" symbol="nodestring" state="22"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="19">
+      <itemset>
+        <item rule-number="11" point="0"/>
+        <item rule-number="14" point="3"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TINT" state="17"/>
+          <transition type="goto" symbol="nodenum" state="23"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="20">
+      <itemset>
+        <item rule-number="8" point="4"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="8" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="21">
+      <itemset>
+        <item rule-number="12" point="1"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="12" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="22">
+      <itemset>
+        <item rule-number="9" point="0"/>
+        <item rule-number="10" point="4"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="goto" symbol="$@1" state="24"/>
+        </transitions>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="9" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="23">
+      <itemset>
+        <item rule-number="13" point="0"/>
+        <item rule-number="14" point="4"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="goto" symbol="$@2" state="25"/>
+        </transitions>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="13" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="24">
+      <itemset>
+        <item rule-number="10" point="5"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TRSB" state="26"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="25">
+      <itemset>
+        <item rule-number="14" point="5"/>
+      </itemset>
+      <actions>
+        <transitions>
+          <transition type="shift" symbol="TRSB" state="27"/>
+        </transitions>
+        <errors/>
+        <reductions/>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="26">
+      <itemset>
+        <item rule-number="10" point="6"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="10" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+
+    <state number="27">
+      <itemset>
+        <item rule-number="14" point="6"/>
+      </itemset>
+      <actions>
+        <transitions/>
+        <errors/>
+        <reductions>
+          <reduction symbol="$default" rule="14" enabled="true"/>
+        </reductions>
+      </actions>
+      <solved-conflicts/>
+    </state>
+  </automaton>
+</bison-xml-report>

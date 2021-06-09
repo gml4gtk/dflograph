@@ -1,0 +1,22 @@
+(z,a)
+(a,b)
+(b,c)
+(c,a)
+(b,a)
+(a,d)
+(d,e)
+(e,f)
+(f,g)
+(f,h)
+(h,i)
+(i,j)
+(j,k)
+(k,l)
+(g,m)
+(m,n)
+(n,k)
+(n,g)
+a[ x= ]
+b [y=,=x]
+c [=y]
+n [=y]

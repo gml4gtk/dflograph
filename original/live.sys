@@ -1,0 +1,5 @@
+{ Live.in node - [1] = Live.out * TRANS + EXPOSEUP ;
+  Live.out node - [1] = any succs( Live.in ) }
+{ Live - [0] = any succs( Live ) * TRANSUP + EXPOSEUP;
+  transup = TRANSUP; transup.in node = TRANS;
+  exposeup = EXPOSEUP; exposeup.in node = EXPOSEUP }

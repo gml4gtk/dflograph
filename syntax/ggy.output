@@ -1,0 +1,2852 @@
+Grammar
+
+    0 $accept: graph $end
+
+    1 graph: things
+
+    2 things: thing
+    3       | things thing
+    4       | things TSEMI thing
+
+    5 thing: link
+    6      | list
+    7      | equationlist
+
+    8 link: TLP from linksep to TRP
+    9     | TLP from linksep to TCOMMA edgelabel TRP
+
+   10 $@1: %empty
+
+   11 link: from TDOTARROW $@1 to
+
+   12 $@2: %empty
+
+   13 link: from TDOTREVARROW $@2 to
+
+   14 $@3: %empty
+
+   15 link: from TDOTBOTHARROW $@3 to
+
+   16 $@4: %empty
+
+   17 link: from TDOTNOARROW $@4 to
+   18     | from TARROW to
+
+   19 $@5: %empty
+
+   20 link: from TREVARROW $@5 to
+
+   21 $@6: %empty
+
+   22 link: from TBOTHARROW $@6 to
+
+   23 $@7: %empty
+
+   24 link: from TNOARROW $@7 to
+   25     | from TDASH to
+   26     | from TCOLON to
+   27     | from TCOMMA to
+
+   28 linksep: TCOMMA
+   29        | TARROW
+   30        | TDASH
+   31        | TCOLON
+   32        | TREVARROW
+   33        | TBOTHARROW
+   34        | TNOARROW
+   35        | TDOTARROW
+   36        | TDOTREVARROW
+   37        | TDOTBOTHARROW
+   38        | TDOTNOARROW
+
+   39 $@8: %empty
+
+   40 from: TID $@8 attributes
+
+   41 $@9: %empty
+
+   42 from: TINT $@9 attributes
+
+   43 $@10: %empty
+
+   44 to: TID $@10 attributes
+
+   45 $@11: %empty
+
+   46 to: TINT $@11 attributes
+
+   47 edgelabel: TID
+   48          | TINT
+   49          | TSTRING
+
+   50 attributes: %empty
+   51           | TBANG
+   52           | TBANG TBANG
+
+   53 $@12: %empty
+
+   54 list: TID $@12 TLSB stufflist TRSB
+
+   55 $@13: %empty
+
+   56 list: TINT $@13 TLSB stufflist TRSB
+
+   57 stufflist: %empty
+   58          | stuff
+
+   59 stuff: stuffing
+   60      | stuff TSEMI stuffing
+   61      | stuff TCOMMA stuffing
+
+   62 stuffing: lhs rhs
+
+   63 lhsid: TID
+
+   64 lhs: lhsid TEQUAL
+   65    | TEQUAL
+
+   66 rhs: rhs0
+   67    | %empty
+
+   68 rhs0: rhs10
+   69     | rhs0 TBARBAR rhs10
+
+   70 rhs10: rhs20
+   71      | rhs10 TAMPAMP rhs20
+
+   72 rhs20: rhs30
+   73      | rhs20 TBAR rhs30
+
+   74 rhs30: rhs40
+   75      | rhs30 TUPARROW rhs40
+
+   76 rhs40: rhs50
+   77      | rhs40 TAMP rhs50
+
+   78 rhs50: rhs60
+   79      | rhs50 TEQUALEQUAL rhs60
+   80      | rhs50 TNOTEQUAL rhs60
+
+   81 rhs60: rhs70
+   82      | rhs60 TGREATEREQUAL rhs70
+   83      | rhs60 TGREATER rhs70
+   84      | rhs60 TLESSEQUAL rhs70
+   85      | rhs60 TLESS rhs70
+
+   86 rhs70: rhs80
+   87      | rhs70 TLEFTSHIFT rhs80
+   88      | rhs70 TRIGHTSHIFT rhs80
+
+   89 rhs80: rhs90
+   90      | rhs80 TPLUS rhs90
+   91      | rhs80 TDASH rhs90
+
+   92 rhs90: rhs100
+   93      | rhs90 TSTAR rhs100
+   94      | rhs90 TMOD rhs100
+   95      | rhs90 TSLASH rhs100
+
+   96 rhs100: rhs110
+   97       | TBANG rhs110
+   98       | TTILDE rhs110
+   99       | TPLUS rhs110
+  100       | TDASH rhs110
+  101       | TSTAR rhs110
+
+  102 rhs110: TID
+  103       | TINT
+  104       | TLP rhs0 TRP
+
+  105 atom: equationid
+  106     | equationid TDOT TIN
+  107     | equationid TDOT TOUT
+  108     | TALL TPRED atom
+  109     | TANY TPRED atom
+  110     | TALL TPRED TEDGE atom
+  111     | TANY TPRED TEDGE atom
+  112     | TPRED TNODE atom
+  113     | TALL TSUCC atom
+  114     | TANY TSUCC atom
+  115     | TALL TSUCC TEDGE atom
+  116     | TANY TSUCC TEDGE atom
+  117     | TSUCC TNODE atom
+  118     | TLP expression TRP
+
+  119 factor: atom
+  120       | TBANG atom
+
+  121 term: factor
+  122     | term TSTAR factor
+
+  123 expression: term
+  124           | expression TPLUS term
+
+  125 equationlist: TLCB eqlist TRCB
+
+  126 eqlist: equation
+  127       | eqlist TSEMI equation
+
+  128 $@14: %empty
+
+  129 $@15: %empty
+
+  130 equation: equationid $@14 inout nodeexpr direction $@15 initial TEQUAL expression
+
+  131 equationid: TID
+
+  132 nodeexpr: TNODE
+  133         | TEDGE
+  134         | %empty
+
+  135 inout: TDOT TIN
+  136      | TDOT TOUT
+  137      | %empty
+
+  138 initial: %empty
+  139        | TLSB value TRSB
+  140        | TLSB value TCOMMA value TRSB
+
+  141 value: %empty
+  142      | TINT
+
+  143 direction: TPLUS
+  144          | TDASH
+  145          | %empty
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+TID (258) 40 44 47 54 63 102 131
+TSTRING (259) 49
+TARROW (260) 18 29
+TREVARROW (261) 20 32
+TBOTHARROW (262) 22 33
+TNOARROW (263) 24 34
+TDOTARROW (264) 11 35
+TDOTREVARROW (265) 13 36
+TDOTBOTHARROW (266) 15 37
+TDOTNOARROW (267) 17 38
+TBARBAR (268) 69
+TAMPAMP (269) 71
+TBAR (270) 73
+TUPARROW (271) 75
+TAMP (272) 77
+TEQUALEQUAL (273) 79
+TNOTEQUAL (274) 80
+TGREATEREQUAL (275) 82
+TGREATER (276) 83
+TLESSEQUAL (277) 84
+TLESS (278) 85
+TLEFTSHIFT (279) 87
+TRIGHTSHIFT (280) 88
+TPLUS (281) 90 99 124 143
+TDASH (282) 25 30 91 100 144
+TSTAR (283) 93 101 122
+TSLASH (284) 95
+TMOD (285) 94
+TBANG (286) 51 52 97 120
+TTILDE (287) 98
+TCOLON (288) 26 31
+TCOMMA (289) 9 27 28 61 140
+TEQUAL (290) 64 65 130
+TLP (291) 8 9 104 118
+TRP (292) 8 9 104 118
+TSEMI (293) 4 60 127
+TDOT (294) 106 107 135 136
+TLSB (295) 54 56 139 140
+TRSB (296) 54 56 139 140
+TLCB (297) 125
+TRCB (298) 125
+TALL (299) 108 110 113 115
+TANY (300) 109 111 114 116
+TPRED (301) 108 109 110 111 112
+TSUCC (302) 113 114 115 116 117
+TINT (303) 42 46 48 56 103 142
+TIN (304) 106 135
+TOUT (305) 107 136
+TNODE (306) 112 117 132
+TEDGE (307) 110 111 115 116 133
+
+
+Nonterminals, with rules where they appear
+
+$accept (53)
+    on left: 0
+graph (54)
+    on left: 1, on right: 0
+things (55)
+    on left: 2 3 4, on right: 1 3 4
+thing (56)
+    on left: 5 6 7, on right: 2 3 4
+link (57)
+    on left: 8 9 11 13 15 17 18 20 22 24 25 26 27, on right: 5
+$@1 (58)
+    on left: 10, on right: 11
+$@2 (59)
+    on left: 12, on right: 13
+$@3 (60)
+    on left: 14, on right: 15
+$@4 (61)
+    on left: 16, on right: 17
+$@5 (62)
+    on left: 19, on right: 20
+$@6 (63)
+    on left: 21, on right: 22
+$@7 (64)
+    on left: 23, on right: 24
+linksep (65)
+    on left: 28 29 30 31 32 33 34 35 36 37 38, on right: 8 9
+from (66)
+    on left: 40 42, on right: 8 9 11 13 15 17 18 20 22 24 25 26 27
+$@8 (67)
+    on left: 39, on right: 40
+$@9 (68)
+    on left: 41, on right: 42
+to (69)
+    on left: 44 46, on right: 8 9 11 13 15 17 18 20 22 24 25 26 27
+$@10 (70)
+    on left: 43, on right: 44
+$@11 (71)
+    on left: 45, on right: 46
+edgelabel (72)
+    on left: 47 48 49, on right: 9
+attributes (73)
+    on left: 50 51 52, on right: 40 42 44 46
+list (74)
+    on left: 54 56, on right: 6
+$@12 (75)
+    on left: 53, on right: 54
+$@13 (76)
+    on left: 55, on right: 56
+stufflist (77)
+    on left: 57 58, on right: 54 56
+stuff (78)
+    on left: 59 60 61, on right: 58 60 61
+stuffing (79)
+    on left: 62, on right: 59 60 61
+lhsid <var> (80)
+    on left: 63, on right: 64
+lhs <var> (81)
+    on left: 64 65, on right: 62
+rhs <exp> (82)
+    on left: 66 67, on right: 62
+rhs0 <exp> (83)
+    on left: 68 69, on right: 66 69 104
+rhs10 <exp> (84)
+    on left: 70 71, on right: 68 69 71
+rhs20 <exp> (85)
+    on left: 72 73, on right: 70 71 73
+rhs30 <exp> (86)
+    on left: 74 75, on right: 72 73 75
+rhs40 <exp> (87)
+    on left: 76 77, on right: 74 75 77
+rhs50 <exp> (88)
+    on left: 78 79 80, on right: 76 77 79 80
+rhs60 <exp> (89)
+    on left: 81 82 83 84 85, on right: 78 79 80 82 83 84 85
+rhs70 <exp> (90)
+    on left: 86 87 88, on right: 81 82 83 84 85 87 88
+rhs80 <exp> (91)
+    on left: 89 90 91, on right: 86 87 88 90 91
+rhs90 <exp> (92)
+    on left: 92 93 94 95, on right: 89 90 91 93 94 95
+rhs100 <exp> (93)
+    on left: 96 97 98 99 100 101, on right: 92 93 94 95
+rhs110 <exp> (94)
+    on left: 102 103 104, on right: 96 97 98 99 100 101
+atom <dfexp> (95)
+    on left: 105 106 107 108 109 110 111 112 113 114 115 116 117 118,
+    on right: 108 109 110 111 112 113 114 115 116 117 119 120
+factor <dfexp> (96)
+    on left: 119 120, on right: 121 122
+term <dfexp> (97)
+    on left: 121 122, on right: 122 123 124
+expression <dfexp> (98)
+    on left: 123 124, on right: 118 124 130
+equationlist (99)
+    on left: 125, on right: 7
+eqlist (100)
+    on left: 126 127, on right: 125 127
+equation (101)
+    on left: 130, on right: 126 127
+$@14 (102)
+    on left: 128, on right: 130
+$@15 (103)
+    on left: 129, on right: 130
+equationid <df> (104)
+    on left: 131, on right: 105 106 107 130
+nodeexpr <Intval> (105)
+    on left: 132 133 134, on right: 130
+inout <Intval> (106)
+    on left: 135 136 137, on right: 130
+initial (107)
+    on left: 138 139 140, on right: 130
+value <Intval> (108)
+    on left: 141 142, on right: 139 140
+direction <Intval> (109)
+    on left: 143 144 145, on right: 130
+
+
+State 0
+
+    0 $accept: . graph $end
+
+    TID   shift, and go to state 1
+    TLP   shift, and go to state 2
+    TLCB  shift, and go to state 3
+    TINT  shift, and go to state 4
+
+    graph         go to state 5
+    things        go to state 6
+    thing         go to state 7
+    link          go to state 8
+    from          go to state 9
+    list          go to state 10
+    equationlist  go to state 11
+
+
+State 1
+
+   40 from: TID . $@8 attributes
+   54 list: TID . $@12 TLSB stufflist TRSB
+
+    TLSB      reduce using rule 53 ($@12)
+    $default  reduce using rule 39 ($@8)
+
+    $@8   go to state 12
+    $@12  go to state 13
+
+
+State 2
+
+    8 link: TLP . from linksep to TRP
+    9     | TLP . from linksep to TCOMMA edgelabel TRP
+
+    TID   shift, and go to state 14
+    TINT  shift, and go to state 15
+
+    from  go to state 16
+
+
+State 3
+
+  125 equationlist: TLCB . eqlist TRCB
+
+    TID  shift, and go to state 17
+
+    eqlist      go to state 18
+    equation    go to state 19
+    equationid  go to state 20
+
+
+State 4
+
+   42 from: TINT . $@9 attributes
+   56 list: TINT . $@13 TLSB stufflist TRSB
+
+    TLSB      reduce using rule 55 ($@13)
+    $default  reduce using rule 41 ($@9)
+
+    $@9   go to state 21
+    $@13  go to state 22
+
+
+State 5
+
+    0 $accept: graph . $end
+
+    $end  shift, and go to state 23
+
+
+State 6
+
+    1 graph: things .
+    3 things: things . thing
+    4       | things . TSEMI thing
+
+    TID    shift, and go to state 1
+    TLP    shift, and go to state 2
+    TSEMI  shift, and go to state 24
+    TLCB   shift, and go to state 3
+    TINT   shift, and go to state 4
+
+    $default  reduce using rule 1 (graph)
+
+    thing         go to state 25
+    link          go to state 8
+    from          go to state 9
+    list          go to state 10
+    equationlist  go to state 11
+
+
+State 7
+
+    2 things: thing .
+
+    $default  reduce using rule 2 (things)
+
+
+State 8
+
+    5 thing: link .
+
+    $default  reduce using rule 5 (thing)
+
+
+State 9
+
+   11 link: from . TDOTARROW $@1 to
+   13     | from . TDOTREVARROW $@2 to
+   15     | from . TDOTBOTHARROW $@3 to
+   17     | from . TDOTNOARROW $@4 to
+   18     | from . TARROW to
+   20     | from . TREVARROW $@5 to
+   22     | from . TBOTHARROW $@6 to
+   24     | from . TNOARROW $@7 to
+   25     | from . TDASH to
+   26     | from . TCOLON to
+   27     | from . TCOMMA to
+
+    TARROW         shift, and go to state 26
+    TREVARROW      shift, and go to state 27
+    TBOTHARROW     shift, and go to state 28
+    TNOARROW       shift, and go to state 29
+    TDOTARROW      shift, and go to state 30
+    TDOTREVARROW   shift, and go to state 31
+    TDOTBOTHARROW  shift, and go to state 32
+    TDOTNOARROW    shift, and go to state 33
+    TDASH          shift, and go to state 34
+    TCOLON         shift, and go to state 35
+    TCOMMA         shift, and go to state 36
+
+
+State 10
+
+    6 thing: list .
+
+    $default  reduce using rule 6 (thing)
+
+
+State 11
+
+    7 thing: equationlist .
+
+    $default  reduce using rule 7 (thing)
+
+
+State 12
+
+   40 from: TID $@8 . attributes
+
+    TBANG  shift, and go to state 37
+
+    $default  reduce using rule 50 (attributes)
+
+    attributes  go to state 38
+
+
+State 13
+
+   54 list: TID $@12 . TLSB stufflist TRSB
+
+    TLSB  shift, and go to state 39
+
+
+State 14
+
+   40 from: TID . $@8 attributes
+
+    $default  reduce using rule 39 ($@8)
+
+    $@8  go to state 12
+
+
+State 15
+
+   42 from: TINT . $@9 attributes
+
+    $default  reduce using rule 41 ($@9)
+
+    $@9  go to state 21
+
+
+State 16
+
+    8 link: TLP from . linksep to TRP
+    9     | TLP from . linksep to TCOMMA edgelabel TRP
+
+    TARROW         shift, and go to state 40
+    TREVARROW      shift, and go to state 41
+    TBOTHARROW     shift, and go to state 42
+    TNOARROW       shift, and go to state 43
+    TDOTARROW      shift, and go to state 44
+    TDOTREVARROW   shift, and go to state 45
+    TDOTBOTHARROW  shift, and go to state 46
+    TDOTNOARROW    shift, and go to state 47
+    TDASH          shift, and go to state 48
+    TCOLON         shift, and go to state 49
+    TCOMMA         shift, and go to state 50
+
+    linksep  go to state 51
+
+
+State 17
+
+  131 equationid: TID .
+
+    $default  reduce using rule 131 (equationid)
+
+
+State 18
+
+  125 equationlist: TLCB eqlist . TRCB
+  127 eqlist: eqlist . TSEMI equation
+
+    TSEMI  shift, and go to state 52
+    TRCB   shift, and go to state 53
+
+
+State 19
+
+  126 eqlist: equation .
+
+    $default  reduce using rule 126 (eqlist)
+
+
+State 20
+
+  130 equation: equationid . $@14 inout nodeexpr direction $@15 initial TEQUAL expression
+
+    $default  reduce using rule 128 ($@14)
+
+    $@14  go to state 54
+
+
+State 21
+
+   42 from: TINT $@9 . attributes
+
+    TBANG  shift, and go to state 37
+
+    $default  reduce using rule 50 (attributes)
+
+    attributes  go to state 55
+
+
+State 22
+
+   56 list: TINT $@13 . TLSB stufflist TRSB
+
+    TLSB  shift, and go to state 56
+
+
+State 23
+
+    0 $accept: graph $end .
+
+    $default  accept
+
+
+State 24
+
+    4 things: things TSEMI . thing
+
+    TID   shift, and go to state 1
+    TLP   shift, and go to state 2
+    TLCB  shift, and go to state 3
+    TINT  shift, and go to state 4
+
+    thing         go to state 57
+    link          go to state 8
+    from          go to state 9
+    list          go to state 10
+    equationlist  go to state 11
+
+
+State 25
+
+    3 things: things thing .
+
+    $default  reduce using rule 3 (things)
+
+
+State 26
+
+   18 link: from TARROW . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 60
+
+
+State 27
+
+   20 link: from TREVARROW . $@5 to
+
+    $default  reduce using rule 19 ($@5)
+
+    $@5  go to state 61
+
+
+State 28
+
+   22 link: from TBOTHARROW . $@6 to
+
+    $default  reduce using rule 21 ($@6)
+
+    $@6  go to state 62
+
+
+State 29
+
+   24 link: from TNOARROW . $@7 to
+
+    $default  reduce using rule 23 ($@7)
+
+    $@7  go to state 63
+
+
+State 30
+
+   11 link: from TDOTARROW . $@1 to
+
+    $default  reduce using rule 10 ($@1)
+
+    $@1  go to state 64
+
+
+State 31
+
+   13 link: from TDOTREVARROW . $@2 to
+
+    $default  reduce using rule 12 ($@2)
+
+    $@2  go to state 65
+
+
+State 32
+
+   15 link: from TDOTBOTHARROW . $@3 to
+
+    $default  reduce using rule 14 ($@3)
+
+    $@3  go to state 66
+
+
+State 33
+
+   17 link: from TDOTNOARROW . $@4 to
+
+    $default  reduce using rule 16 ($@4)
+
+    $@4  go to state 67
+
+
+State 34
+
+   25 link: from TDASH . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 68
+
+
+State 35
+
+   26 link: from TCOLON . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 69
+
+
+State 36
+
+   27 link: from TCOMMA . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 70
+
+
+State 37
+
+   51 attributes: TBANG .
+   52           | TBANG . TBANG
+
+    TBANG  shift, and go to state 71
+
+    $default  reduce using rule 51 (attributes)
+
+
+State 38
+
+   40 from: TID $@8 attributes .
+
+    $default  reduce using rule 40 (from)
+
+
+State 39
+
+   54 list: TID $@12 TLSB . stufflist TRSB
+
+    TID     shift, and go to state 72
+    TEQUAL  shift, and go to state 73
+
+    $default  reduce using rule 57 (stufflist)
+
+    stufflist  go to state 74
+    stuff      go to state 75
+    stuffing   go to state 76
+    lhsid      go to state 77
+    lhs        go to state 78
+
+
+State 40
+
+   29 linksep: TARROW .
+
+    $default  reduce using rule 29 (linksep)
+
+
+State 41
+
+   32 linksep: TREVARROW .
+
+    $default  reduce using rule 32 (linksep)
+
+
+State 42
+
+   33 linksep: TBOTHARROW .
+
+    $default  reduce using rule 33 (linksep)
+
+
+State 43
+
+   34 linksep: TNOARROW .
+
+    $default  reduce using rule 34 (linksep)
+
+
+State 44
+
+   35 linksep: TDOTARROW .
+
+    $default  reduce using rule 35 (linksep)
+
+
+State 45
+
+   36 linksep: TDOTREVARROW .
+
+    $default  reduce using rule 36 (linksep)
+
+
+State 46
+
+   37 linksep: TDOTBOTHARROW .
+
+    $default  reduce using rule 37 (linksep)
+
+
+State 47
+
+   38 linksep: TDOTNOARROW .
+
+    $default  reduce using rule 38 (linksep)
+
+
+State 48
+
+   30 linksep: TDASH .
+
+    $default  reduce using rule 30 (linksep)
+
+
+State 49
+
+   31 linksep: TCOLON .
+
+    $default  reduce using rule 31 (linksep)
+
+
+State 50
+
+   28 linksep: TCOMMA .
+
+    $default  reduce using rule 28 (linksep)
+
+
+State 51
+
+    8 link: TLP from linksep . to TRP
+    9     | TLP from linksep . to TCOMMA edgelabel TRP
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 79
+
+
+State 52
+
+  127 eqlist: eqlist TSEMI . equation
+
+    TID  shift, and go to state 17
+
+    equation    go to state 80
+    equationid  go to state 20
+
+
+State 53
+
+  125 equationlist: TLCB eqlist TRCB .
+
+    $default  reduce using rule 125 (equationlist)
+
+
+State 54
+
+  130 equation: equationid $@14 . inout nodeexpr direction $@15 initial TEQUAL expression
+
+    TDOT  shift, and go to state 81
+
+    $default  reduce using rule 137 (inout)
+
+    inout  go to state 82
+
+
+State 55
+
+   42 from: TINT $@9 attributes .
+
+    $default  reduce using rule 42 (from)
+
+
+State 56
+
+   56 list: TINT $@13 TLSB . stufflist TRSB
+
+    TID     shift, and go to state 72
+    TEQUAL  shift, and go to state 73
+
+    $default  reduce using rule 57 (stufflist)
+
+    stufflist  go to state 83
+    stuff      go to state 75
+    stuffing   go to state 76
+    lhsid      go to state 77
+    lhs        go to state 78
+
+
+State 57
+
+    4 things: things TSEMI thing .
+
+    $default  reduce using rule 4 (things)
+
+
+State 58
+
+   44 to: TID . $@10 attributes
+
+    $default  reduce using rule 43 ($@10)
+
+    $@10  go to state 84
+
+
+State 59
+
+   46 to: TINT . $@11 attributes
+
+    $default  reduce using rule 45 ($@11)
+
+    $@11  go to state 85
+
+
+State 60
+
+   18 link: from TARROW to .
+
+    $default  reduce using rule 18 (link)
+
+
+State 61
+
+   20 link: from TREVARROW $@5 . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 86
+
+
+State 62
+
+   22 link: from TBOTHARROW $@6 . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 87
+
+
+State 63
+
+   24 link: from TNOARROW $@7 . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 88
+
+
+State 64
+
+   11 link: from TDOTARROW $@1 . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 89
+
+
+State 65
+
+   13 link: from TDOTREVARROW $@2 . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 90
+
+
+State 66
+
+   15 link: from TDOTBOTHARROW $@3 . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 91
+
+
+State 67
+
+   17 link: from TDOTNOARROW $@4 . to
+
+    TID   shift, and go to state 58
+    TINT  shift, and go to state 59
+
+    to  go to state 92
+
+
+State 68
+
+   25 link: from TDASH to .
+
+    $default  reduce using rule 25 (link)
+
+
+State 69
+
+   26 link: from TCOLON to .
+
+    $default  reduce using rule 26 (link)
+
+
+State 70
+
+   27 link: from TCOMMA to .
+
+    $default  reduce using rule 27 (link)
+
+
+State 71
+
+   52 attributes: TBANG TBANG .
+
+    $default  reduce using rule 52 (attributes)
+
+
+State 72
+
+   63 lhsid: TID .
+
+    $default  reduce using rule 63 (lhsid)
+
+
+State 73
+
+   65 lhs: TEQUAL .
+
+    $default  reduce using rule 65 (lhs)
+
+
+State 74
+
+   54 list: TID $@12 TLSB stufflist . TRSB
+
+    TRSB  shift, and go to state 93
+
+
+State 75
+
+   58 stufflist: stuff .
+   60 stuff: stuff . TSEMI stuffing
+   61      | stuff . TCOMMA stuffing
+
+    TCOMMA  shift, and go to state 94
+    TSEMI   shift, and go to state 95
+
+    $default  reduce using rule 58 (stufflist)
+
+
+State 76
+
+   59 stuff: stuffing .
+
+    $default  reduce using rule 59 (stuff)
+
+
+State 77
+
+   64 lhs: lhsid . TEQUAL
+
+    TEQUAL  shift, and go to state 96
+
+
+State 78
+
+   62 stuffing: lhs . rhs
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    $default  reduce using rule 67 (rhs)
+
+    rhs     go to state 105
+    rhs0    go to state 106
+    rhs10   go to state 107
+    rhs20   go to state 108
+    rhs30   go to state 109
+    rhs40   go to state 110
+    rhs50   go to state 111
+    rhs60   go to state 112
+    rhs70   go to state 113
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 79
+
+    8 link: TLP from linksep to . TRP
+    9     | TLP from linksep to . TCOMMA edgelabel TRP
+
+    TCOMMA  shift, and go to state 118
+    TRP     shift, and go to state 119
+
+
+State 80
+
+  127 eqlist: eqlist TSEMI equation .
+
+    $default  reduce using rule 127 (eqlist)
+
+
+State 81
+
+  135 inout: TDOT . TIN
+  136      | TDOT . TOUT
+
+    TIN   shift, and go to state 120
+    TOUT  shift, and go to state 121
+
+
+State 82
+
+  130 equation: equationid $@14 inout . nodeexpr direction $@15 initial TEQUAL expression
+
+    TNODE  shift, and go to state 122
+    TEDGE  shift, and go to state 123
+
+    $default  reduce using rule 134 (nodeexpr)
+
+    nodeexpr  go to state 124
+
+
+State 83
+
+   56 list: TINT $@13 TLSB stufflist . TRSB
+
+    TRSB  shift, and go to state 125
+
+
+State 84
+
+   44 to: TID $@10 . attributes
+
+    TBANG  shift, and go to state 37
+
+    $default  reduce using rule 50 (attributes)
+
+    attributes  go to state 126
+
+
+State 85
+
+   46 to: TINT $@11 . attributes
+
+    TBANG  shift, and go to state 37
+
+    $default  reduce using rule 50 (attributes)
+
+    attributes  go to state 127
+
+
+State 86
+
+   20 link: from TREVARROW $@5 to .
+
+    $default  reduce using rule 20 (link)
+
+
+State 87
+
+   22 link: from TBOTHARROW $@6 to .
+
+    $default  reduce using rule 22 (link)
+
+
+State 88
+
+   24 link: from TNOARROW $@7 to .
+
+    $default  reduce using rule 24 (link)
+
+
+State 89
+
+   11 link: from TDOTARROW $@1 to .
+
+    $default  reduce using rule 11 (link)
+
+
+State 90
+
+   13 link: from TDOTREVARROW $@2 to .
+
+    $default  reduce using rule 13 (link)
+
+
+State 91
+
+   15 link: from TDOTBOTHARROW $@3 to .
+
+    $default  reduce using rule 15 (link)
+
+
+State 92
+
+   17 link: from TDOTNOARROW $@4 to .
+
+    $default  reduce using rule 17 (link)
+
+
+State 93
+
+   54 list: TID $@12 TLSB stufflist TRSB .
+
+    $default  reduce using rule 54 (list)
+
+
+State 94
+
+   61 stuff: stuff TCOMMA . stuffing
+
+    TID     shift, and go to state 72
+    TEQUAL  shift, and go to state 73
+
+    stuffing  go to state 128
+    lhsid     go to state 77
+    lhs       go to state 78
+
+
+State 95
+
+   60 stuff: stuff TSEMI . stuffing
+
+    TID     shift, and go to state 72
+    TEQUAL  shift, and go to state 73
+
+    stuffing  go to state 129
+    lhsid     go to state 77
+    lhs       go to state 78
+
+
+State 96
+
+   64 lhs: lhsid TEQUAL .
+
+    $default  reduce using rule 64 (lhs)
+
+
+State 97
+
+  102 rhs110: TID .
+
+    $default  reduce using rule 102 (rhs110)
+
+
+State 98
+
+   99 rhs100: TPLUS . rhs110
+
+    TID   shift, and go to state 97
+    TLP   shift, and go to state 103
+    TINT  shift, and go to state 104
+
+    rhs110  go to state 130
+
+
+State 99
+
+  100 rhs100: TDASH . rhs110
+
+    TID   shift, and go to state 97
+    TLP   shift, and go to state 103
+    TINT  shift, and go to state 104
+
+    rhs110  go to state 131
+
+
+State 100
+
+  101 rhs100: TSTAR . rhs110
+
+    TID   shift, and go to state 97
+    TLP   shift, and go to state 103
+    TINT  shift, and go to state 104
+
+    rhs110  go to state 132
+
+
+State 101
+
+   97 rhs100: TBANG . rhs110
+
+    TID   shift, and go to state 97
+    TLP   shift, and go to state 103
+    TINT  shift, and go to state 104
+
+    rhs110  go to state 133
+
+
+State 102
+
+   98 rhs100: TTILDE . rhs110
+
+    TID   shift, and go to state 97
+    TLP   shift, and go to state 103
+    TINT  shift, and go to state 104
+
+    rhs110  go to state 134
+
+
+State 103
+
+  104 rhs110: TLP . rhs0 TRP
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs0    go to state 135
+    rhs10   go to state 107
+    rhs20   go to state 108
+    rhs30   go to state 109
+    rhs40   go to state 110
+    rhs50   go to state 111
+    rhs60   go to state 112
+    rhs70   go to state 113
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 104
+
+  103 rhs110: TINT .
+
+    $default  reduce using rule 103 (rhs110)
+
+
+State 105
+
+   62 stuffing: lhs rhs .
+
+    $default  reduce using rule 62 (stuffing)
+
+
+State 106
+
+   66 rhs: rhs0 .
+   69 rhs0: rhs0 . TBARBAR rhs10
+
+    TBARBAR  shift, and go to state 136
+
+    $default  reduce using rule 66 (rhs)
+
+
+State 107
+
+   68 rhs0: rhs10 .
+   71 rhs10: rhs10 . TAMPAMP rhs20
+
+    TAMPAMP  shift, and go to state 137
+
+    $default  reduce using rule 68 (rhs0)
+
+
+State 108
+
+   70 rhs10: rhs20 .
+   73 rhs20: rhs20 . TBAR rhs30
+
+    TBAR  shift, and go to state 138
+
+    $default  reduce using rule 70 (rhs10)
+
+
+State 109
+
+   72 rhs20: rhs30 .
+   75 rhs30: rhs30 . TUPARROW rhs40
+
+    TUPARROW  shift, and go to state 139
+
+    $default  reduce using rule 72 (rhs20)
+
+
+State 110
+
+   74 rhs30: rhs40 .
+   77 rhs40: rhs40 . TAMP rhs50
+
+    TAMP  shift, and go to state 140
+
+    $default  reduce using rule 74 (rhs30)
+
+
+State 111
+
+   76 rhs40: rhs50 .
+   79 rhs50: rhs50 . TEQUALEQUAL rhs60
+   80      | rhs50 . TNOTEQUAL rhs60
+
+    TEQUALEQUAL  shift, and go to state 141
+    TNOTEQUAL    shift, and go to state 142
+
+    $default  reduce using rule 76 (rhs40)
+
+
+State 112
+
+   78 rhs50: rhs60 .
+   82 rhs60: rhs60 . TGREATEREQUAL rhs70
+   83      | rhs60 . TGREATER rhs70
+   84      | rhs60 . TLESSEQUAL rhs70
+   85      | rhs60 . TLESS rhs70
+
+    TGREATEREQUAL  shift, and go to state 143
+    TGREATER       shift, and go to state 144
+    TLESSEQUAL     shift, and go to state 145
+    TLESS          shift, and go to state 146
+
+    $default  reduce using rule 78 (rhs50)
+
+
+State 113
+
+   81 rhs60: rhs70 .
+   87 rhs70: rhs70 . TLEFTSHIFT rhs80
+   88      | rhs70 . TRIGHTSHIFT rhs80
+
+    TLEFTSHIFT   shift, and go to state 147
+    TRIGHTSHIFT  shift, and go to state 148
+
+    $default  reduce using rule 81 (rhs60)
+
+
+State 114
+
+   86 rhs70: rhs80 .
+   90 rhs80: rhs80 . TPLUS rhs90
+   91      | rhs80 . TDASH rhs90
+
+    TPLUS  shift, and go to state 149
+    TDASH  shift, and go to state 150
+
+    $default  reduce using rule 86 (rhs70)
+
+
+State 115
+
+   89 rhs80: rhs90 .
+   93 rhs90: rhs90 . TSTAR rhs100
+   94      | rhs90 . TMOD rhs100
+   95      | rhs90 . TSLASH rhs100
+
+    TSTAR   shift, and go to state 151
+    TSLASH  shift, and go to state 152
+    TMOD    shift, and go to state 153
+
+    $default  reduce using rule 89 (rhs80)
+
+
+State 116
+
+   92 rhs90: rhs100 .
+
+    $default  reduce using rule 92 (rhs90)
+
+
+State 117
+
+   96 rhs100: rhs110 .
+
+    $default  reduce using rule 96 (rhs100)
+
+
+State 118
+
+    9 link: TLP from linksep to TCOMMA . edgelabel TRP
+
+    TID      shift, and go to state 154
+    TSTRING  shift, and go to state 155
+    TINT     shift, and go to state 156
+
+    edgelabel  go to state 157
+
+
+State 119
+
+    8 link: TLP from linksep to TRP .
+
+    $default  reduce using rule 8 (link)
+
+
+State 120
+
+  135 inout: TDOT TIN .
+
+    $default  reduce using rule 135 (inout)
+
+
+State 121
+
+  136 inout: TDOT TOUT .
+
+    $default  reduce using rule 136 (inout)
+
+
+State 122
+
+  132 nodeexpr: TNODE .
+
+    $default  reduce using rule 132 (nodeexpr)
+
+
+State 123
+
+  133 nodeexpr: TEDGE .
+
+    $default  reduce using rule 133 (nodeexpr)
+
+
+State 124
+
+  130 equation: equationid $@14 inout nodeexpr . direction $@15 initial TEQUAL expression
+
+    TPLUS  shift, and go to state 158
+    TDASH  shift, and go to state 159
+
+    $default  reduce using rule 145 (direction)
+
+    direction  go to state 160
+
+
+State 125
+
+   56 list: TINT $@13 TLSB stufflist TRSB .
+
+    $default  reduce using rule 56 (list)
+
+
+State 126
+
+   44 to: TID $@10 attributes .
+
+    $default  reduce using rule 44 (to)
+
+
+State 127
+
+   46 to: TINT $@11 attributes .
+
+    $default  reduce using rule 46 (to)
+
+
+State 128
+
+   61 stuff: stuff TCOMMA stuffing .
+
+    $default  reduce using rule 61 (stuff)
+
+
+State 129
+
+   60 stuff: stuff TSEMI stuffing .
+
+    $default  reduce using rule 60 (stuff)
+
+
+State 130
+
+   99 rhs100: TPLUS rhs110 .
+
+    $default  reduce using rule 99 (rhs100)
+
+
+State 131
+
+  100 rhs100: TDASH rhs110 .
+
+    $default  reduce using rule 100 (rhs100)
+
+
+State 132
+
+  101 rhs100: TSTAR rhs110 .
+
+    $default  reduce using rule 101 (rhs100)
+
+
+State 133
+
+   97 rhs100: TBANG rhs110 .
+
+    $default  reduce using rule 97 (rhs100)
+
+
+State 134
+
+   98 rhs100: TTILDE rhs110 .
+
+    $default  reduce using rule 98 (rhs100)
+
+
+State 135
+
+   69 rhs0: rhs0 . TBARBAR rhs10
+  104 rhs110: TLP rhs0 . TRP
+
+    TBARBAR  shift, and go to state 136
+    TRP      shift, and go to state 161
+
+
+State 136
+
+   69 rhs0: rhs0 TBARBAR . rhs10
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs10   go to state 162
+    rhs20   go to state 108
+    rhs30   go to state 109
+    rhs40   go to state 110
+    rhs50   go to state 111
+    rhs60   go to state 112
+    rhs70   go to state 113
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 137
+
+   71 rhs10: rhs10 TAMPAMP . rhs20
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs20   go to state 163
+    rhs30   go to state 109
+    rhs40   go to state 110
+    rhs50   go to state 111
+    rhs60   go to state 112
+    rhs70   go to state 113
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 138
+
+   73 rhs20: rhs20 TBAR . rhs30
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs30   go to state 164
+    rhs40   go to state 110
+    rhs50   go to state 111
+    rhs60   go to state 112
+    rhs70   go to state 113
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 139
+
+   75 rhs30: rhs30 TUPARROW . rhs40
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs40   go to state 165
+    rhs50   go to state 111
+    rhs60   go to state 112
+    rhs70   go to state 113
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 140
+
+   77 rhs40: rhs40 TAMP . rhs50
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs50   go to state 166
+    rhs60   go to state 112
+    rhs70   go to state 113
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 141
+
+   79 rhs50: rhs50 TEQUALEQUAL . rhs60
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs60   go to state 167
+    rhs70   go to state 113
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 142
+
+   80 rhs50: rhs50 TNOTEQUAL . rhs60
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs60   go to state 168
+    rhs70   go to state 113
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 143
+
+   82 rhs60: rhs60 TGREATEREQUAL . rhs70
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs70   go to state 169
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 144
+
+   83 rhs60: rhs60 TGREATER . rhs70
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs70   go to state 170
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 145
+
+   84 rhs60: rhs60 TLESSEQUAL . rhs70
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs70   go to state 171
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 146
+
+   85 rhs60: rhs60 TLESS . rhs70
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs70   go to state 172
+    rhs80   go to state 114
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 147
+
+   87 rhs70: rhs70 TLEFTSHIFT . rhs80
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs80   go to state 173
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 148
+
+   88 rhs70: rhs70 TRIGHTSHIFT . rhs80
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs80   go to state 174
+    rhs90   go to state 115
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 149
+
+   90 rhs80: rhs80 TPLUS . rhs90
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs90   go to state 175
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 150
+
+   91 rhs80: rhs80 TDASH . rhs90
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs90   go to state 176
+    rhs100  go to state 116
+    rhs110  go to state 117
+
+
+State 151
+
+   93 rhs90: rhs90 TSTAR . rhs100
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs100  go to state 177
+    rhs110  go to state 117
+
+
+State 152
+
+   95 rhs90: rhs90 TSLASH . rhs100
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs100  go to state 178
+    rhs110  go to state 117
+
+
+State 153
+
+   94 rhs90: rhs90 TMOD . rhs100
+
+    TID     shift, and go to state 97
+    TPLUS   shift, and go to state 98
+    TDASH   shift, and go to state 99
+    TSTAR   shift, and go to state 100
+    TBANG   shift, and go to state 101
+    TTILDE  shift, and go to state 102
+    TLP     shift, and go to state 103
+    TINT    shift, and go to state 104
+
+    rhs100  go to state 179
+    rhs110  go to state 117
+
+
+State 154
+
+   47 edgelabel: TID .
+
+    $default  reduce using rule 47 (edgelabel)
+
+
+State 155
+
+   49 edgelabel: TSTRING .
+
+    $default  reduce using rule 49 (edgelabel)
+
+
+State 156
+
+   48 edgelabel: TINT .
+
+    $default  reduce using rule 48 (edgelabel)
+
+
+State 157
+
+    9 link: TLP from linksep to TCOMMA edgelabel . TRP
+
+    TRP  shift, and go to state 180
+
+
+State 158
+
+  143 direction: TPLUS .
+
+    $default  reduce using rule 143 (direction)
+
+
+State 159
+
+  144 direction: TDASH .
+
+    $default  reduce using rule 144 (direction)
+
+
+State 160
+
+  130 equation: equationid $@14 inout nodeexpr direction . $@15 initial TEQUAL expression
+
+    $default  reduce using rule 129 ($@15)
+
+    $@15  go to state 181
+
+
+State 161
+
+  104 rhs110: TLP rhs0 TRP .
+
+    $default  reduce using rule 104 (rhs110)
+
+
+State 162
+
+   69 rhs0: rhs0 TBARBAR rhs10 .
+   71 rhs10: rhs10 . TAMPAMP rhs20
+
+    TAMPAMP  shift, and go to state 137
+
+    $default  reduce using rule 69 (rhs0)
+
+
+State 163
+
+   71 rhs10: rhs10 TAMPAMP rhs20 .
+   73 rhs20: rhs20 . TBAR rhs30
+
+    TBAR  shift, and go to state 138
+
+    $default  reduce using rule 71 (rhs10)
+
+
+State 164
+
+   73 rhs20: rhs20 TBAR rhs30 .
+   75 rhs30: rhs30 . TUPARROW rhs40
+
+    TUPARROW  shift, and go to state 139
+
+    $default  reduce using rule 73 (rhs20)
+
+
+State 165
+
+   75 rhs30: rhs30 TUPARROW rhs40 .
+   77 rhs40: rhs40 . TAMP rhs50
+
+    TAMP  shift, and go to state 140
+
+    $default  reduce using rule 75 (rhs30)
+
+
+State 166
+
+   77 rhs40: rhs40 TAMP rhs50 .
+   79 rhs50: rhs50 . TEQUALEQUAL rhs60
+   80      | rhs50 . TNOTEQUAL rhs60
+
+    TEQUALEQUAL  shift, and go to state 141
+    TNOTEQUAL    shift, and go to state 142
+
+    $default  reduce using rule 77 (rhs40)
+
+
+State 167
+
+   79 rhs50: rhs50 TEQUALEQUAL rhs60 .
+   82 rhs60: rhs60 . TGREATEREQUAL rhs70
+   83      | rhs60 . TGREATER rhs70
+   84      | rhs60 . TLESSEQUAL rhs70
+   85      | rhs60 . TLESS rhs70
+
+    TGREATEREQUAL  shift, and go to state 143
+    TGREATER       shift, and go to state 144
+    TLESSEQUAL     shift, and go to state 145
+    TLESS          shift, and go to state 146
+
+    $default  reduce using rule 79 (rhs50)
+
+
+State 168
+
+   80 rhs50: rhs50 TNOTEQUAL rhs60 .
+   82 rhs60: rhs60 . TGREATEREQUAL rhs70
+   83      | rhs60 . TGREATER rhs70
+   84      | rhs60 . TLESSEQUAL rhs70
+   85      | rhs60 . TLESS rhs70
+
+    TGREATEREQUAL  shift, and go to state 143
+    TGREATER       shift, and go to state 144
+    TLESSEQUAL     shift, and go to state 145
+    TLESS          shift, and go to state 146
+
+    $default  reduce using rule 80 (rhs50)
+
+
+State 169
+
+   82 rhs60: rhs60 TGREATEREQUAL rhs70 .
+   87 rhs70: rhs70 . TLEFTSHIFT rhs80
+   88      | rhs70 . TRIGHTSHIFT rhs80
+
+    TLEFTSHIFT   shift, and go to state 147
+    TRIGHTSHIFT  shift, and go to state 148
+
+    $default  reduce using rule 82 (rhs60)
+
+
+State 170
+
+   83 rhs60: rhs60 TGREATER rhs70 .
+   87 rhs70: rhs70 . TLEFTSHIFT rhs80
+   88      | rhs70 . TRIGHTSHIFT rhs80
+
+    TLEFTSHIFT   shift, and go to state 147
+    TRIGHTSHIFT  shift, and go to state 148
+
+    $default  reduce using rule 83 (rhs60)
+
+
+State 171
+
+   84 rhs60: rhs60 TLESSEQUAL rhs70 .
+   87 rhs70: rhs70 . TLEFTSHIFT rhs80
+   88      | rhs70 . TRIGHTSHIFT rhs80
+
+    TLEFTSHIFT   shift, and go to state 147
+    TRIGHTSHIFT  shift, and go to state 148
+
+    $default  reduce using rule 84 (rhs60)
+
+
+State 172
+
+   85 rhs60: rhs60 TLESS rhs70 .
+   87 rhs70: rhs70 . TLEFTSHIFT rhs80
+   88      | rhs70 . TRIGHTSHIFT rhs80
+
+    TLEFTSHIFT   shift, and go to state 147
+    TRIGHTSHIFT  shift, and go to state 148
+
+    $default  reduce using rule 85 (rhs60)
+
+
+State 173
+
+   87 rhs70: rhs70 TLEFTSHIFT rhs80 .
+   90 rhs80: rhs80 . TPLUS rhs90
+   91      | rhs80 . TDASH rhs90
+
+    TPLUS  shift, and go to state 149
+    TDASH  shift, and go to state 150
+
+    $default  reduce using rule 87 (rhs70)
+
+
+State 174
+
+   88 rhs70: rhs70 TRIGHTSHIFT rhs80 .
+   90 rhs80: rhs80 . TPLUS rhs90
+   91      | rhs80 . TDASH rhs90
+
+    TPLUS  shift, and go to state 149
+    TDASH  shift, and go to state 150
+
+    $default  reduce using rule 88 (rhs70)
+
+
+State 175
+
+   90 rhs80: rhs80 TPLUS rhs90 .
+   93 rhs90: rhs90 . TSTAR rhs100
+   94      | rhs90 . TMOD rhs100
+   95      | rhs90 . TSLASH rhs100
+
+    TSTAR   shift, and go to state 151
+    TSLASH  shift, and go to state 152
+    TMOD    shift, and go to state 153
+
+    $default  reduce using rule 90 (rhs80)
+
+
+State 176
+
+   91 rhs80: rhs80 TDASH rhs90 .
+   93 rhs90: rhs90 . TSTAR rhs100
+   94      | rhs90 . TMOD rhs100
+   95      | rhs90 . TSLASH rhs100
+
+    TSTAR   shift, and go to state 151
+    TSLASH  shift, and go to state 152
+    TMOD    shift, and go to state 153
+
+    $default  reduce using rule 91 (rhs80)
+
+
+State 177
+
+   93 rhs90: rhs90 TSTAR rhs100 .
+
+    $default  reduce using rule 93 (rhs90)
+
+
+State 178
+
+   95 rhs90: rhs90 TSLASH rhs100 .
+
+    $default  reduce using rule 95 (rhs90)
+
+
+State 179
+
+   94 rhs90: rhs90 TMOD rhs100 .
+
+    $default  reduce using rule 94 (rhs90)
+
+
+State 180
+
+    9 link: TLP from linksep to TCOMMA edgelabel TRP .
+
+    $default  reduce using rule 9 (link)
+
+
+State 181
+
+  130 equation: equationid $@14 inout nodeexpr direction $@15 . initial TEQUAL expression
+
+    TLSB  shift, and go to state 182
+
+    $default  reduce using rule 138 (initial)
+
+    initial  go to state 183
+
+
+State 182
+
+  139 initial: TLSB . value TRSB
+  140        | TLSB . value TCOMMA value TRSB
+
+    TINT  shift, and go to state 184
+
+    $default  reduce using rule 141 (value)
+
+    value  go to state 185
+
+
+State 183
+
+  130 equation: equationid $@14 inout nodeexpr direction $@15 initial . TEQUAL expression
+
+    TEQUAL  shift, and go to state 186
+
+
+State 184
+
+  142 value: TINT .
+
+    $default  reduce using rule 142 (value)
+
+
+State 185
+
+  139 initial: TLSB value . TRSB
+  140        | TLSB value . TCOMMA value TRSB
+
+    TCOMMA  shift, and go to state 187
+    TRSB    shift, and go to state 188
+
+
+State 186
+
+  130 equation: equationid $@14 inout nodeexpr direction $@15 initial TEQUAL . expression
+
+    TID    shift, and go to state 17
+    TBANG  shift, and go to state 189
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 195
+    factor      go to state 196
+    term        go to state 197
+    expression  go to state 198
+    equationid  go to state 199
+
+
+State 187
+
+  140 initial: TLSB value TCOMMA . value TRSB
+
+    TINT  shift, and go to state 184
+
+    $default  reduce using rule 141 (value)
+
+    value  go to state 200
+
+
+State 188
+
+  139 initial: TLSB value TRSB .
+
+    $default  reduce using rule 139 (initial)
+
+
+State 189
+
+  120 factor: TBANG . atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 201
+    equationid  go to state 199
+
+
+State 190
+
+  118 atom: TLP . expression TRP
+
+    TID    shift, and go to state 17
+    TBANG  shift, and go to state 189
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 195
+    factor      go to state 196
+    term        go to state 197
+    expression  go to state 202
+    equationid  go to state 199
+
+
+State 191
+
+  108 atom: TALL . TPRED atom
+  110     | TALL . TPRED TEDGE atom
+  113     | TALL . TSUCC atom
+  115     | TALL . TSUCC TEDGE atom
+
+    TPRED  shift, and go to state 203
+    TSUCC  shift, and go to state 204
+
+
+State 192
+
+  109 atom: TANY . TPRED atom
+  111     | TANY . TPRED TEDGE atom
+  114     | TANY . TSUCC atom
+  116     | TANY . TSUCC TEDGE atom
+
+    TPRED  shift, and go to state 205
+    TSUCC  shift, and go to state 206
+
+
+State 193
+
+  112 atom: TPRED . TNODE atom
+
+    TNODE  shift, and go to state 207
+
+
+State 194
+
+  117 atom: TSUCC . TNODE atom
+
+    TNODE  shift, and go to state 208
+
+
+State 195
+
+  119 factor: atom .
+
+    $default  reduce using rule 119 (factor)
+
+
+State 196
+
+  121 term: factor .
+
+    $default  reduce using rule 121 (term)
+
+
+State 197
+
+  122 term: term . TSTAR factor
+  123 expression: term .
+
+    TSTAR  shift, and go to state 209
+
+    $default  reduce using rule 123 (expression)
+
+
+State 198
+
+  124 expression: expression . TPLUS term
+  130 equation: equationid $@14 inout nodeexpr direction $@15 initial TEQUAL expression .
+
+    TPLUS  shift, and go to state 210
+
+    $default  reduce using rule 130 (equation)
+
+
+State 199
+
+  105 atom: equationid .
+  106     | equationid . TDOT TIN
+  107     | equationid . TDOT TOUT
+
+    TDOT  shift, and go to state 211
+
+    $default  reduce using rule 105 (atom)
+
+
+State 200
+
+  140 initial: TLSB value TCOMMA value . TRSB
+
+    TRSB  shift, and go to state 212
+
+
+State 201
+
+  120 factor: TBANG atom .
+
+    $default  reduce using rule 120 (factor)
+
+
+State 202
+
+  118 atom: TLP expression . TRP
+  124 expression: expression . TPLUS term
+
+    TPLUS  shift, and go to state 210
+    TRP    shift, and go to state 213
+
+
+State 203
+
+  108 atom: TALL TPRED . atom
+  110     | TALL TPRED . TEDGE atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+    TEDGE  shift, and go to state 214
+
+    atom        go to state 215
+    equationid  go to state 199
+
+
+State 204
+
+  113 atom: TALL TSUCC . atom
+  115     | TALL TSUCC . TEDGE atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+    TEDGE  shift, and go to state 216
+
+    atom        go to state 217
+    equationid  go to state 199
+
+
+State 205
+
+  109 atom: TANY TPRED . atom
+  111     | TANY TPRED . TEDGE atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+    TEDGE  shift, and go to state 218
+
+    atom        go to state 219
+    equationid  go to state 199
+
+
+State 206
+
+  114 atom: TANY TSUCC . atom
+  116     | TANY TSUCC . TEDGE atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+    TEDGE  shift, and go to state 220
+
+    atom        go to state 221
+    equationid  go to state 199
+
+
+State 207
+
+  112 atom: TPRED TNODE . atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 222
+    equationid  go to state 199
+
+
+State 208
+
+  117 atom: TSUCC TNODE . atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 223
+    equationid  go to state 199
+
+
+State 209
+
+  122 term: term TSTAR . factor
+
+    TID    shift, and go to state 17
+    TBANG  shift, and go to state 189
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 195
+    factor      go to state 224
+    equationid  go to state 199
+
+
+State 210
+
+  124 expression: expression TPLUS . term
+
+    TID    shift, and go to state 17
+    TBANG  shift, and go to state 189
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 195
+    factor      go to state 196
+    term        go to state 225
+    equationid  go to state 199
+
+
+State 211
+
+  106 atom: equationid TDOT . TIN
+  107     | equationid TDOT . TOUT
+
+    TIN   shift, and go to state 226
+    TOUT  shift, and go to state 227
+
+
+State 212
+
+  140 initial: TLSB value TCOMMA value TRSB .
+
+    $default  reduce using rule 140 (initial)
+
+
+State 213
+
+  118 atom: TLP expression TRP .
+
+    $default  reduce using rule 118 (atom)
+
+
+State 214
+
+  110 atom: TALL TPRED TEDGE . atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 228
+    equationid  go to state 199
+
+
+State 215
+
+  108 atom: TALL TPRED atom .
+
+    $default  reduce using rule 108 (atom)
+
+
+State 216
+
+  115 atom: TALL TSUCC TEDGE . atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 229
+    equationid  go to state 199
+
+
+State 217
+
+  113 atom: TALL TSUCC atom .
+
+    $default  reduce using rule 113 (atom)
+
+
+State 218
+
+  111 atom: TANY TPRED TEDGE . atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 230
+    equationid  go to state 199
+
+
+State 219
+
+  109 atom: TANY TPRED atom .
+
+    $default  reduce using rule 109 (atom)
+
+
+State 220
+
+  116 atom: TANY TSUCC TEDGE . atom
+
+    TID    shift, and go to state 17
+    TLP    shift, and go to state 190
+    TALL   shift, and go to state 191
+    TANY   shift, and go to state 192
+    TPRED  shift, and go to state 193
+    TSUCC  shift, and go to state 194
+
+    atom        go to state 231
+    equationid  go to state 199
+
+
+State 221
+
+  114 atom: TANY TSUCC atom .
+
+    $default  reduce using rule 114 (atom)
+
+
+State 222
+
+  112 atom: TPRED TNODE atom .
+
+    $default  reduce using rule 112 (atom)
+
+
+State 223
+
+  117 atom: TSUCC TNODE atom .
+
+    $default  reduce using rule 117 (atom)
+
+
+State 224
+
+  122 term: term TSTAR factor .
+
+    $default  reduce using rule 122 (term)
+
+
+State 225
+
+  122 term: term . TSTAR factor
+  124 expression: expression TPLUS term .
+
+    TSTAR  shift, and go to state 209
+
+    $default  reduce using rule 124 (expression)
+
+
+State 226
+
+  106 atom: equationid TDOT TIN .
+
+    $default  reduce using rule 106 (atom)
+
+
+State 227
+
+  107 atom: equationid TDOT TOUT .
+
+    $default  reduce using rule 107 (atom)
+
+
+State 228
+
+  110 atom: TALL TPRED TEDGE atom .
+
+    $default  reduce using rule 110 (atom)
+
+
+State 229
+
+  115 atom: TALL TSUCC TEDGE atom .
+
+    $default  reduce using rule 115 (atom)
+
+
+State 230
+
+  111 atom: TANY TPRED TEDGE atom .
+
+    $default  reduce using rule 111 (atom)
+
+
+State 231
+
+  116 atom: TANY TSUCC TEDGE atom .
+
+    $default  reduce using rule 116 (atom)

@@ -1,0 +1,297 @@
+Grammar
+
+    0 $accept: graph $end
+
+    1 graph: graphtype TLSB things TRSB
+
+    2 graphtype: TGRAPH
+    3          | TDIGRAPH
+
+    4 things: thing
+    5       | things thing
+
+    6 thing: node
+    7      | edge
+
+    8 node: TNODE TLSB nodenum TRSB
+
+    9 $@1: %empty
+
+   10 node: TNODE TLSB nodenum nodestring $@1 TRSB
+
+   11 nodenum: TINT
+
+   12 nodestring: TSTRING
+
+   13 $@2: %empty
+
+   14 edge: TEDGE TLSB nodenum nodenum $@2 TRSB
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+TLSB (258) 1 8 10 14
+TRSB (259) 1 8 10 14
+TNODE (260) 8 10
+TEDGE (261) 14
+TGRAPH (262) 2
+TDIGRAPH (263) 3
+TINT (264) 11
+TSTRING (265) 12
+
+
+Nonterminals, with rules where they appear
+
+$accept (11)
+    on left: 0
+graph (12)
+    on left: 1, on right: 0
+graphtype (13)
+    on left: 2 3, on right: 1
+things (14)
+    on left: 4 5, on right: 1 5
+thing (15)
+    on left: 6 7, on right: 4 5
+node (16)
+    on left: 8 10, on right: 6
+$@1 (17)
+    on left: 9, on right: 10
+nodenum <ggptr> (18)
+    on left: 11, on right: 8 10 14
+nodestring <name> (19)
+    on left: 12, on right: 10
+edge (20)
+    on left: 14, on right: 7
+$@2 (21)
+    on left: 13, on right: 14
+
+
+State 0
+
+    0 $accept: . graph $end
+
+    TGRAPH    shift, and go to state 1
+    TDIGRAPH  shift, and go to state 2
+
+    graph      go to state 3
+    graphtype  go to state 4
+
+
+State 1
+
+    2 graphtype: TGRAPH .
+
+    $default  reduce using rule 2 (graphtype)
+
+
+State 2
+
+    3 graphtype: TDIGRAPH .
+
+    $default  reduce using rule 3 (graphtype)
+
+
+State 3
+
+    0 $accept: graph . $end
+
+    $end  shift, and go to state 5
+
+
+State 4
+
+    1 graph: graphtype . TLSB things TRSB
+
+    TLSB  shift, and go to state 6
+
+
+State 5
+
+    0 $accept: graph $end .
+
+    $default  accept
+
+
+State 6
+
+    1 graph: graphtype TLSB . things TRSB
+
+    TNODE  shift, and go to state 7
+    TEDGE  shift, and go to state 8
+
+    things  go to state 9
+    thing   go to state 10
+    node    go to state 11
+    edge    go to state 12
+
+
+State 7
+
+    8 node: TNODE . TLSB nodenum TRSB
+   10     | TNODE . TLSB nodenum nodestring $@1 TRSB
+
+    TLSB  shift, and go to state 13
+
+
+State 8
+
+   14 edge: TEDGE . TLSB nodenum nodenum $@2 TRSB
+
+    TLSB  shift, and go to state 14
+
+
+State 9
+
+    1 graph: graphtype TLSB things . TRSB
+    5 things: things . thing
+
+    TRSB   shift, and go to state 15
+    TNODE  shift, and go to state 7
+    TEDGE  shift, and go to state 8
+
+    thing  go to state 16
+    node   go to state 11
+    edge   go to state 12
+
+
+State 10
+
+    4 things: thing .
+
+    $default  reduce using rule 4 (things)
+
+
+State 11
+
+    6 thing: node .
+
+    $default  reduce using rule 6 (thing)
+
+
+State 12
+
+    7 thing: edge .
+
+    $default  reduce using rule 7 (thing)
+
+
+State 13
+
+    8 node: TNODE TLSB . nodenum TRSB
+   10     | TNODE TLSB . nodenum nodestring $@1 TRSB
+
+    TINT  shift, and go to state 17
+
+    nodenum  go to state 18
+
+
+State 14
+
+   14 edge: TEDGE TLSB . nodenum nodenum $@2 TRSB
+
+    TINT  shift, and go to state 17
+
+    nodenum  go to state 19
+
+
+State 15
+
+    1 graph: graphtype TLSB things TRSB .
+
+    $default  reduce using rule 1 (graph)
+
+
+State 16
+
+    5 things: things thing .
+
+    $default  reduce using rule 5 (things)
+
+
+State 17
+
+   11 nodenum: TINT .
+
+    $default  reduce using rule 11 (nodenum)
+
+
+State 18
+
+    8 node: TNODE TLSB nodenum . TRSB
+   10     | TNODE TLSB nodenum . nodestring $@1 TRSB
+
+    TRSB     shift, and go to state 20
+    TSTRING  shift, and go to state 21
+
+    nodestring  go to state 22
+
+
+State 19
+
+   14 edge: TEDGE TLSB nodenum . nodenum $@2 TRSB
+
+    TINT  shift, and go to state 17
+
+    nodenum  go to state 23
+
+
+State 20
+
+    8 node: TNODE TLSB nodenum TRSB .
+
+    $default  reduce using rule 8 (node)
+
+
+State 21
+
+   12 nodestring: TSTRING .
+
+    $default  reduce using rule 12 (nodestring)
+
+
+State 22
+
+   10 node: TNODE TLSB nodenum nodestring . $@1 TRSB
+
+    $default  reduce using rule 9 ($@1)
+
+    $@1  go to state 24
+
+
+State 23
+
+   14 edge: TEDGE TLSB nodenum nodenum . $@2 TRSB
+
+    $default  reduce using rule 13 ($@2)
+
+    $@2  go to state 25
+
+
+State 24
+
+   10 node: TNODE TLSB nodenum nodestring $@1 . TRSB
+
+    TRSB  shift, and go to state 26
+
+
+State 25
+
+   14 edge: TEDGE TLSB nodenum nodenum $@2 . TRSB
+
+    TRSB  shift, and go to state 27
+
+
+State 26
+
+   10 node: TNODE TLSB nodenum nodestring $@1 TRSB .
+
+    $default  reduce using rule 10 (node)
+
+
+State 27
+
+   14 edge: TEDGE TLSB nodenum nodenum $@2 TRSB .
+
+    $default  reduce using rule 14 (edge)
